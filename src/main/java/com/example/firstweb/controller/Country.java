@@ -4,8 +4,8 @@ import lombok.Getter;
 
 @Getter
 public class Country {
-    private String code;
-    private String name;
+    private final String code;
+    private final String name;
 
     public Country(String code, String name) {
         this.code = code;

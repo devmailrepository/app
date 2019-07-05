@@ -12,6 +12,6 @@ public class ExceptionCatcher {
     @ExceptionHandler(QueryParameterMissingException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ErrorResponse handleException(QueryParameterMissingException ex) {
-        return new ErrorResponse("You have a problem");
+        return new ErrorResponse("12", ex.getMessage());
     }
 }

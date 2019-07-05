@@ -4,5 +4,4 @@ import com.example.firstweb.controller.Country;
 
 public interface CountryRepository {
     Country getByCode(String code, String lang);
-
 }
