@@ -6,9 +6,7 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
          http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.3.xsd">
 
-    <changeSet context="test" id="1" author="bulka">
-        <sqlFile path="src/main/resources/sql/001_init.sql"/>
-
-    </changeSet>
+    <!--    <includeAll path="/src/main/resources/changesetsSQL"/>-->
+    <includeAll path="/home/oleksandr/dev/workspace/firstweb/src/main/resources/changesetsSQL"/>
 
 </databaseChangeLog>

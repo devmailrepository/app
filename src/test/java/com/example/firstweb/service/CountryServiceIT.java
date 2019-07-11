@@ -10,10 +10,7 @@ import liquibase.database.DatabaseFactory;
 import liquibase.exception.LiquibaseException;
 import liquibase.resource.FileSystemResourceAccessor;
 import liquibase.resource.ResourceAccessor;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.testcontainers.containers.PostgreSQLContainer;
@@ -26,7 +23,7 @@ class CountryServiceIT {
 
     private static PostgreSQLContainer postgresqlContainer;
 
-    private static final String CHANGE_LOG = "/home/oleksandr/dev/workspace/firstweb/src/main/resources/db_changelog.xml";
+    private static final String CHANGE_LOG = "/home/oleksandr/dev/workspace/firstweb/src/main/resources/changelog-master.xml";
     private static Liquibase liquibase;
     private static JdbcTemplate jdbcTemplate;
 
@@ -68,28 +65,34 @@ class CountryServiceIT {
         liquibase.dropAll();
     }
 
-//    @AfterAll
-//    static void containerStop() {
-//        postgresqlContainer.stop();
-//    }
-
-    @Test
-    void containerTest() {
-        assertTrue(postgresqlContainer.isRunning());
+    @AfterAll
+    static void containerStop() {
+        postgresqlContainer.stop();
     }
 
     @Test
     void getByCode() {
+        String SET_DATAS_SQL = "INSERT INTO country_codes (code)\n" +
+            "VALUES ('BEL');" +
+            "INSERT INTO languages (lang)\n" +
+            "VALUES ('EN');" +
+            "INSERT INTO country_names (codes_id, description, lang_id)\n" +
+            "VALUES (1, 'Belgium', 1);";
+        jdbcTemplate.update(SET_DATAS_SQL);
+
         Country country = countryService.getByCode("BEL", "EN");
+
+        assertNotNull(country, "country is null");
         assertEquals("Belgium", country.getName());
         assertEquals("BEL", country.getCode());
     }
 
     @Test
     void getByCode2() {
+
         assertThrows(
             CountryNotFoundException.class,
-            () -> countryService.getByCode("BE", "EN")
+            () -> countryService.getByCode("BEL", "EN")
         );
     }
 }
