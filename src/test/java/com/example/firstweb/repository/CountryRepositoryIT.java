@@ -1,9 +1,6 @@
-package com.example.firstweb.service;
+package com.example.firstweb.repository;
 
 import com.example.firstweb.controller.Country;
-import com.example.firstweb.exception.CountryNotFoundException;
-import com.example.firstweb.repository.CountryRepository;
-import com.example.firstweb.repository.PostgresCountryRepository;
 import liquibase.Liquibase;
 import liquibase.database.Database;
 import liquibase.database.DatabaseFactory;
@@ -19,7 +16,7 @@ import javax.sql.DataSource;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class CountryServiceIT {
+class CountryRepositoryIT {
     private final static String COUNTRY_CODE = "BEL";
 
     private static PostgreSQLContainer postgresqlContainer;
@@ -29,7 +26,6 @@ class CountryServiceIT {
     private static JdbcTemplate jdbcTemplate;
 
     private final CountryRepository countryRepository = new PostgresCountryRepository(jdbcTemplate);
-    private final CountryService countryService = new CountryServiceImp(countryRepository);
 
     @BeforeAll
     static void containerStart() {
@@ -79,7 +75,7 @@ class CountryServiceIT {
                 "INSERT INTO country_names (codes_id, description, lang_id) VALUES (1, 'Belgium', 1);";
         jdbcTemplate.update(SET_DATAS_SQL);
 
-        Country country = countryService.getByCode(COUNTRY_CODE, "EN");
+        Country country = countryRepository.getByCode(COUNTRY_CODE, "EN");
 
         assertNotNull(country, "country is null");
         assertEquals("Belgium", country.getName());
@@ -89,9 +85,11 @@ class CountryServiceIT {
     @Test
     void getByCode2() {
 
-        assertThrows(
-            CountryNotFoundException.class,
-            () -> countryService.getByCode(COUNTRY_CODE, "EN")
-        );
+//        assertThrows(
+//            CountryNotFoundException.class,
+//            () -> countryRepository.getByCode(COUNTRY_CODE, "EN")
+//        );
+        Country country = countryRepository.getByCode(COUNTRY_CODE, "EN");
+        assertNull(country);
     }
 }

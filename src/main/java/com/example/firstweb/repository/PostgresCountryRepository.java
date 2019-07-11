@@ -10,6 +10,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 @Repository
+
 public class PostgresCountryRepository implements CountryRepository {
     private static final String GET_BY_CODE = "" +
         "SELECT country_codes.code, country_names.description\n" +
@@ -38,7 +39,8 @@ public class PostgresCountryRepository implements CountryRepository {
     @Override
     public Country getByCode(String code, String lang) {
         try {
-            return jdbcTemplate.queryForObject(GET_BY_CODE, new CountryRowMapper(), code, lang);
+            Country country = jdbcTemplate.queryForObject(GET_BY_CODE, new CountryRowMapper(), code, lang);
+            return country;
         } catch (EmptyResultDataAccessException e) {
             return null;
         }
