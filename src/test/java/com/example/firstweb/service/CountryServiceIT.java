@@ -20,6 +20,7 @@ import javax.sql.DataSource;
 import static org.junit.jupiter.api.Assertions.*;
 
 class CountryServiceIT {
+    private final static String COUNTRY_CODE = "BEL";
 
     private static PostgreSQLContainer postgresqlContainer;
 
@@ -72,19 +73,17 @@ class CountryServiceIT {
 
     @Test
     void getByCode() {
-        String SET_DATAS_SQL = "INSERT INTO country_codes (code)\n" +
-            "VALUES ('BEL');" +
-            "INSERT INTO languages (lang)\n" +
-            "VALUES ('EN');" +
-            "INSERT INTO country_names (codes_id, description, lang_id)\n" +
-            "VALUES (1, 'Belgium', 1);";
+        String SET_DATAS_SQL =
+            "INSERT INTO country_codes (code) VALUES ('" + COUNTRY_CODE + "');\n" +
+                "INSERT INTO languages (lang) VALUES ('EN');\n" +
+                "INSERT INTO country_names (codes_id, description, lang_id) VALUES (1, 'Belgium', 1);";
         jdbcTemplate.update(SET_DATAS_SQL);
 
-        Country country = countryService.getByCode("BEL", "EN");
+        Country country = countryService.getByCode(COUNTRY_CODE, "EN");
 
         assertNotNull(country, "country is null");
         assertEquals("Belgium", country.getName());
-        assertEquals("BEL", country.getCode());
+        assertEquals(COUNTRY_CODE, country.getCode(), "Codes do not equals");
     }
 
     @Test
@@ -92,7 +91,7 @@ class CountryServiceIT {
 
         assertThrows(
             CountryNotFoundException.class,
-            () -> countryService.getByCode("BEL", "EN")
+            () -> countryService.getByCode(COUNTRY_CODE, "EN")
         );
     }
 }
