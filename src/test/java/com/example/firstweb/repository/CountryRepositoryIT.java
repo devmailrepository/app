@@ -85,10 +85,6 @@ class CountryRepositoryIT {
     @Test
     void getByCode2() {
 
-//        assertThrows(
-//            CountryNotFoundException.class,
-//            () -> countryRepository.getByCode(COUNTRY_CODE, "EN")
-//        );
         Country country = countryRepository.getByCode(COUNTRY_CODE, "EN");
         assertNull(country);
     }

@@ -27,7 +27,8 @@ public class Controller {
         if (lang == null)
             throw new QueryParameterMissingException("you miss lang");
 
-        return countryService.getByCode(code, lang);
+        Country result = countryService.getByCode(code, lang);
+        return result;
     }
 }
 

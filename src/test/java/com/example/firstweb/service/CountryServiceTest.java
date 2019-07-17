@@ -24,7 +24,7 @@ class CountryServiceTest {
         Country country = countryService.getByCode("BEL", "EN");
         assertEquals("Belgium", country.getName());
         assertEquals("BEL", country.getCode());
-//
+
         verify(countryRepository, times(1))
             .getByCode(eq("BEL"), eq("EN"));
     }
