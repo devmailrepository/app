@@ -42,4 +42,37 @@ class CountryServiceTest {
         verify(countryRepository, times(1))
             .getByCode(eq("BEL"), eq("EN"));
     }
+
+    @Test
+    void getByCode3() {
+        assertThrows(
+            NullPointerException.class,
+            () -> countryService.getByCode(null, "EN")
+        );
+
+        verify(countryRepository, times(0))
+            .getByCode(any(), any());
+    }
+
+    @Test
+    void getByCode4() {
+        assertThrows(
+            NullPointerException.class,
+            () -> countryService.getByCode(null, null)
+        );
+
+        verify(countryRepository, times(0))
+            .getByCode(any(), any());
+    }
+
+    @Test
+    void getByCode5() {
+        assertThrows(
+            NullPointerException.class,
+            () -> countryService.getByCode("BEL", null)
+        );
+
+        verify(countryRepository, times(0))
+            .getByCode(any(), any());
+    }
 }

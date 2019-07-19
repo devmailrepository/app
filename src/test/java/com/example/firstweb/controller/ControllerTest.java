@@ -1,7 +1,6 @@
 package com.example.firstweb.controller;
 
 import com.example.firstweb.exception.CountryNotFoundException;
-import com.example.firstweb.exception.QueryParameterMissingException;
 import com.example.firstweb.service.CountryService;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
@@ -13,7 +12,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -37,6 +36,7 @@ class ControllerTest {
         mockMvc.perform(get("/countries/BEL?lang=EN"))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.code", Matchers.is("BEL")))
+            .andExpect(jsonPath("$.name", Matchers.is("Belgium")))
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8));
     }
 
@@ -52,17 +52,11 @@ class ControllerTest {
 
     @Test
     void checkException2() throws Exception {
-        when(countryService.getByCode(eq("BEL"), eq(null)))
-            .thenThrow(new QueryParameterMissingException("You miss param: Lang"));
-        mockMvc.perform(get("/countries/BEL"))
-            .andExpect(status().isBadRequest());
-    }
+        mockMvc.perform(get("/countries/FF"))
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.code", Matchers.is("12")));
 
-    @Test
-    void checkException3() throws Exception {
-        when(countryService.getByCode(eq(null), eq(null)))
-            .thenThrow(new QueryParameterMissingException("You miss params: CODE and LANG"));
-        mockMvc.perform(get("/countries"))
-            .andExpect(status().isNotFound());
+        verify(countryService, times(0))
+            .getByCode(any(), any());
     }
 }

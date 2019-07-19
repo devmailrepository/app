@@ -5,13 +5,14 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
-
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Objects;
 
 @Repository
 
 public class PostgresCountryRepository implements CountryRepository {
+
     private static final String GET_BY_CODE = "" +
         "SELECT country_codes.code, country_names.description\n" +
         "FROM country_codes\n" +
@@ -33,14 +34,16 @@ public class PostgresCountryRepository implements CountryRepository {
             final String code = rs.getString("code");
             final String name = rs.getString("description");
             return new Country(code, name);
+
         }
     }
 
     @Override
     public Country getByCode(String code, String lang) {
+        Objects.requireNonNull(code);
+        Objects.requireNonNull(lang);
         try {
-            Country country = jdbcTemplate.queryForObject(GET_BY_CODE, new CountryRowMapper(), code, lang);
-            return country;
+            return jdbcTemplate.queryForObject(GET_BY_CODE, new CountryRowMapper(), code, lang);
         } catch (EmptyResultDataAccessException e) {
             return null;
         }

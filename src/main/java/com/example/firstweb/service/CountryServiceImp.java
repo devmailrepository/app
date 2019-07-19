@@ -5,6 +5,8 @@ import com.example.firstweb.exception.CountryNotFoundException;
 import com.example.firstweb.repository.CountryRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.Objects;
+
 @Service
 
 public class CountryServiceImp implements CountryService {
@@ -16,6 +18,8 @@ public class CountryServiceImp implements CountryService {
 
     @Override
     public Country getByCode(String code, String lang) {
+        Objects.requireNonNull(code);
+        Objects.requireNonNull(lang);
 
         Country country = countryRepository.getByCode(code, lang);
 

@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class Controller {
+
     private final CountryService countryService;
 
     public Controller(CountryService countryService) {
@@ -19,6 +20,7 @@ public class Controller {
     public Country getData(
         @PathVariable(value = "code", required = false) String code,
         @RequestParam(value = "lang", required = false) String lang
+
     ) {
 
         if (code == null)
@@ -27,8 +29,10 @@ public class Controller {
         if (lang == null)
             throw new QueryParameterMissingException("you miss lang");
 
-        Country result = countryService.getByCode(code, lang);
-        return result;
+        return countryService.getByCode(code, lang);
+
+
+
     }
 }
 

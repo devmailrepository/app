@@ -21,7 +21,7 @@ class CountryRepositoryIT {
 
     private static PostgreSQLContainer postgresqlContainer;
 
-    private static final String CHANGE_LOG = "/home/oleksandr/dev/workspace/firstweb/src/main/resources/changelog-master.xml";
+    private static final String CHANGE_LOG = "src/main/resources/changelog-master.xml";
     private static Liquibase liquibase;
     private static JdbcTemplate jdbcTemplate;
 
@@ -68,7 +68,7 @@ class CountryRepositoryIT {
     }
 
     @Test
-    void getByCode() {
+    void getByCode1() {
         String SET_DATAS_SQL =
             "INSERT INTO country_codes (code) VALUES ('" + COUNTRY_CODE + "');\n" +
                 "INSERT INTO languages (lang) VALUES ('EN');\n" +
@@ -77,15 +77,37 @@ class CountryRepositoryIT {
 
         Country country = countryRepository.getByCode(COUNTRY_CODE, "EN");
 
+        assertNotNull(COUNTRY_CODE);
+        assertNotNull(country.getName());
+
         assertNotNull(country, "country is null");
         assertEquals("Belgium", country.getName());
         assertEquals(COUNTRY_CODE, country.getCode(), "Codes do not equals");
     }
 
     @Test
-    void getByCode2() {
-
-        Country country = countryRepository.getByCode(COUNTRY_CODE, "EN");
+    void getByCode() {
+        Country country = countryRepository.getByCode(COUNTRY_CODE, "RU");
         assertNull(country);
+    }
+
+    @Test
+    void getByCode3() {
+        String SET_DATAS_SQL =
+            "INSERT INTO country_codes (code) VALUES ('" + COUNTRY_CODE + "');\n" +
+                "INSERT INTO languages (lang) VALUES ('EN');\n" +
+                "INSERT INTO country_names (codes_id, description, lang_id) VALUES (1, 'Belgium', 1);";
+        jdbcTemplate.update(SET_DATAS_SQL);
+
+        Country country = countryRepository.getByCode(COUNTRY_CODE, "RU");
+        assertNull(country);
+    }
+
+    @Test
+    void getByCode4() {
+        assertThrows(
+            NullPointerException.class,
+            () -> countryRepository.getByCode(null, "EN")
+        );
     }
 }
