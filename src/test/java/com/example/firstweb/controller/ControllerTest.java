@@ -43,7 +43,7 @@ class ControllerTest {
     @Test
     void checkException1() throws Exception {
         when(countryService.getByCode(eq("FF"), eq("EN")))
-            .thenThrow(new CountryNotFoundException());
+            .thenThrow(new CountryNotFoundException("Such country not exist"));
 
         mockMvc.perform(get("/countries/FF?lang=EN"))
             .andExpect(status().isNotFound())

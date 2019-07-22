@@ -4,7 +4,6 @@ import com.example.firstweb.controller.Country;
 import com.example.firstweb.exception.CountryNotFoundException;
 import com.example.firstweb.repository.CountryRepository;
 import org.springframework.stereotype.Service;
-
 import java.util.Objects;
 
 @Service
@@ -21,12 +20,24 @@ public class CountryServiceImp implements CountryService {
         Objects.requireNonNull(code);
         Objects.requireNonNull(lang);
 
-        Country country = countryRepository.getByCode(code, lang);
-
+        final Country country = countryRepository.getByCode(code, lang);
         if (country == null) {
-            throw new CountryNotFoundException();
+            throw new CountryNotFoundException("Such country not exist");
         } else {
             return country;
         }
     }
 }
+
+//        return countryRepository.getByCode(code, lang)
+//            .orElseThrow(() -> new CountryNotFoundException());
+
+//        Optional<Country> box = countryRepository.getByCode(code, lang);
+
+//        if(box.isPresent())
+//            return box.get();
+//        else
+//            throw new CountryNotFoundException();
+
+//        return box.orElse(new Country());
+//        return box.orElseThrow(() -> new CountryNotFoundException());

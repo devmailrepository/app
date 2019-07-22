@@ -23,9 +23,7 @@ public class PostgresCountryRepository implements CountryRepository {
 
     private final JdbcTemplate jdbcTemplate;
 
-    public PostgresCountryRepository(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
-    }
+    private final CountryRowMapper mapper = new CountryRowMapper();
 
     private static class CountryRowMapper implements RowMapper<Country> {
 
@@ -34,8 +32,11 @@ public class PostgresCountryRepository implements CountryRepository {
             final String code = rs.getString("code");
             final String name = rs.getString("description");
             return new Country(code, name);
-
         }
+    }
+
+    public PostgresCountryRepository(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
     }
 
     @Override
@@ -43,7 +44,7 @@ public class PostgresCountryRepository implements CountryRepository {
         Objects.requireNonNull(code);
         Objects.requireNonNull(lang);
         try {
-            return jdbcTemplate.queryForObject(GET_BY_CODE, new CountryRowMapper(), code, lang);
+            return jdbcTemplate.queryForObject(GET_BY_CODE, mapper, code, lang);
         } catch (EmptyResultDataAccessException e) {
             return null;
         }

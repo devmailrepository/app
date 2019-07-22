@@ -7,7 +7,7 @@ public class ErrorResponse {
     private final String code;
     private final String description;
 
-    public ErrorResponse(String code, String description) {
+    public ErrorResponse(final String code, String description) {
         this.code = code;
         this.description = description;
     }

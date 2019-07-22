@@ -135,7 +135,6 @@
             <version>1.3</version>
             <scope>test</scope>
         </dependency>
-
     </dependencies>
 
     <build>
@@ -168,7 +167,6 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>3.0.0-M3</version>
             </plugin>
-
         </plugins>
     </build>
     <profiles>
@@ -246,5 +244,4 @@
             </build>
         </profile>
     </profiles>
-
 </project>
